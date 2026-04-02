@@ -28,8 +28,8 @@
   }
 })();
 const image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAxCAYAAACcXioiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKXSURBVHgB7ZhBbtQwFIZ/zyAxu8IN0hNANqh0Q+YG9ASlJyhzgpmeADgBvQG9QbOCJXMDwgnIqoyEqPnjcWmVxElsPU9bKZ/kZuQ4rp/f+/OeA4yMjDxqFCKhvyHh7B+gUWKGhUp5jcATxGPJxb81v67wk39XiMAE8cj+/5riVH/HM0QgigEMn3e8JLcdXPzvOwYJEssDx40ehVNEQFzERrzAj9abU6TqFdYQJIYHls47f6yoBYlhQOa8E0HMogY0xNsYIC9maQ8c944QFrOYiDvFW2eG51KZWdIDy8Ejr/AeQnh7wIhwwzZl+8s2YbvGC/iXCmd8ds1nS85Vcq6qZip9PdNqAMOh2s3ENMUFattUnHKguQAaoYwhBbarLNm3Vq9pdI2GAfZN8hkPEc2q9hAf73ZNWgbtZpdDUM3wahhgLTzDQ0PjE0PovN7tFDFDaQWfN0tMWkLnhs63EI3IsNVDgvtgK+Yj7nzuGtL7GrUJ6hK7N6Jgm3PxRdeg3kRmJ5iz5dgdOXNC2rf4Cq9EthNdVGI9HJ6p/TNxTCM6xOoiqJjTX3kwUfgCWeZdYnURXI3SE1XlmUCGgovfRwBhHrhktp7hFyQJLLHDyukZXkKaTdicYQZo+cN56JyhB5o3kCdoTv/XaIz4vyFAB/4eeBrnE6Eh4ItFSAhlA8cVbCe2FQOfyeBJiAH9scpywNYy56aG3yA1fRJz1/CrhfriX/GQXpUDjow6qLL11IGfB1zxr82he6EOzK7nrser6tJmXPeJz1MHfgao1mSTsz/1KcJoxIqXfT530XI7gwd+BlzzH2rr3u31hIuZD6nb6xhvHOAIdZFPsAcPQsrpBNUuzXAh9XnQzrnipuxxRYuQDRkZGRm5H/4BIkyx5W7xkPAAAAAASUVORK5CYII=";
-const apiUrl = void 0;
-const accessToken = void 0;
+const apiUrl = "https://api.themoviedb.org/3";
+const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjQ2MjRmMjdjMWVmZTQ4NzE3MTI1OTdkNmFiNjg0ZiIsIm5iZiI6MTc3NDg3MDEzOC4zMzQsInN1YiI6IjY5Y2E1ZTdhOWI4YjFiZDdmMDI2Mzg0ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._9ls2F5VNo4k4c3UBqmC7_IooCgk1ITzrN3_x3LauTc";
 const fetchPopularMovies = async (page) => {
   const response = await fetch(
     `${apiUrl}/movie/popular?language=ko-KR&page=${page}`,
@@ -89,7 +89,7 @@ const makeMovieThumbnail = (movie) => {
   item.className = "item";
   const thumbnail = document.createElement("img");
   thumbnail.className = "thumbnail";
-  thumbnail.src = `${void 0}${movie.poster_path}`;
+  thumbnail.src = `${"https://image.tmdb.org/t/p/w500"}${movie.poster_path}`;
   thumbnail.alt = movie.title;
   const itemDesc = document.createElement("div");
   itemDesc.className = "item-desc";
@@ -136,7 +136,7 @@ const renderTopRatedMovie = (movie) => {
   const backgroundImg = document.querySelector(".background-img");
   title.textContent = movie.title;
   rate.textContent = movie.vote_average.toString();
-  backgroundImg.src = `${void 0}${movie.poster_path}`;
+  backgroundImg.src = `${"https://image.tmdb.org/t/p/w500"}${movie.poster_path}`;
 };
 const renderSkeleton = () => {
   const thumbnailList = document.querySelector(".thumbnail-list");
