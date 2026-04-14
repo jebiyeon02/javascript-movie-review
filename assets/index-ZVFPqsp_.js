@@ -28,57 +28,28 @@
   }
 })();
 const FilledStarIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAxCAYAAACcXioiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKXSURBVHgB7ZhBbtQwFIZ/zyAxu8IN0hNANqh0Q+YG9ASlJyhzgpmeADgBvQG9QbOCJXMDwgnIqoyEqPnjcWmVxElsPU9bKZ/kZuQ4rp/f+/OeA4yMjDxqFCKhvyHh7B+gUWKGhUp5jcATxGPJxb81v67wk39XiMAE8cj+/5riVH/HM0QgigEMn3e8JLcdXPzvOwYJEssDx40ehVNEQFzERrzAj9abU6TqFdYQJIYHls47f6yoBYlhQOa8E0HMogY0xNsYIC9maQ8c944QFrOYiDvFW2eG51KZWdIDy8Ejr/AeQnh7wIhwwzZl+8s2YbvGC/iXCmd8ds1nS85Vcq6qZip9PdNqAMOh2s3ENMUFattUnHKguQAaoYwhBbarLNm3Vq9pdI2GAfZN8hkPEc2q9hAf73ZNWgbtZpdDUM3wahhgLTzDQ0PjE0PovN7tFDFDaQWfN0tMWkLnhs63EI3IsNVDgvtgK+Yj7nzuGtL7GrUJ6hK7N6Jgm3PxRdeg3kRmJ5iz5dgdOXNC2rf4Cq9EthNdVGI9HJ6p/TNxTCM6xOoiqJjTX3kwUfgCWeZdYnURXI3SE1XlmUCGgovfRwBhHrhktp7hFyQJLLHDyukZXkKaTdicYQZo+cN56JyhB5o3kCdoTv/XaIz4vyFAB/4eeBrnE6Eh4ItFSAhlA8cVbCe2FQOfyeBJiAH9scpywNYy56aG3yA1fRJz1/CrhfriX/GQXpUDjow6qLL11IGfB1zxr82he6EOzK7nrser6tJmXPeJz1MHfgao1mSTsz/1KcJoxIqXfT530XI7gwd+BlzzH2rr3u31hIuZD6nb6xhvHOAIdZFPsAcPQsrpBNUuzXAh9XnQzrnipuxxRYuQDRkZGRm5H/4BIkyx5W7xkPAAAAAASUVORK5CYII=";
-const apiUrl$1 = "https://api.themoviedb.org/3";
-const accessToken$1 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWJkNzQ4MWJiMzE0Mjg0OWMzYjY3MjYxYzU4NzIzOCIsIm5iZiI6MTc0NzcxOTQ0OS41MDEsInN1YiI6IjY4MmMxNTE5ZjZjZjIwNzZmM2UyNTExYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6oFSMOPSVI3bY8aHLin9MmLuM4wNHFPREt_eB5mwAy8";
-const fetchPopularMovies = async (page) => {
-  const response = await fetch(
-    `${apiUrl$1}/movie/popular?language=ko-KR&page=${page}&region=ko-KR`,
-    {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${accessToken$1}`
-      }
-    }
-  );
-  if (!response.ok) {
-    throw new Error("영화를 불러오는 데 실패했습니다.");
+const getElementOrThrow = (selector) => {
+  const element = document.querySelector(selector);
+  if (!element) {
+    throw new Error(`${selector} 요소를 찾을 수 없습니다.`);
   }
-  const data = await response.json();
-  return {
-    movies: data.results,
-    nowPage: data.page,
-    totalPages: data.total_pages
-  };
+  return element;
 };
-const fetchSearchedMovies = async (page, searchTitle) => {
-  const response = await fetch(
-    `${apiUrl$1}/search/movie?query=${encodeURIComponent(searchTitle)}&include_adult=false&language=ko-KR&page=${page}&region=KR`,
-    {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${accessToken$1}`
-      }
-    }
-  );
-  if (!response.ok) {
-    throw new Error("영화 검색 중 에러가 발생했습니다.");
+const getYearFromDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.getFullYear();
+};
+class LogoView {
+  #dom;
+  constructor() {
+    this.#dom = {
+      logo: getElementOrThrow(".logo")
+    };
   }
-  const data = await response.json();
-  return {
-    movies: data.results,
-    nowPage: data.page,
-    totalPages: data.total_pages
-  };
-};
-const ERROR_MESSAGE = {
-  MOVIE: {
-    FAILED_SEARCH: "영화 검색에 실패하였습니다.",
-    FAIELD_GET_POPULAR: "인기 영화 목록을 가져오는 데 실패했습니다.",
-    FAILED_GET_MORE: "추가 영화 목록을 가져오는 데 실패했습니다."
+  bindLogoClick(handler) {
+    this.#dom.logo.addEventListener("click", handler);
   }
-};
+}
 const EmptyStarIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAxCAYAAACcXioiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQ4SURBVHgB7VlNctMwFP7UwrRl0/YGzgloNwyURd0TQE5AeoK2J2hyAuAEaU9QOEHMgvCzSW9QcwLChqbDNOI9RVEk106sWGZY5JvR+FlRJD29fxlYYYX/F/I79uQXxKgRAjWANh3Ro0ct0l0ptSPxQj2DYg31oIvZ5qHpLmpAcAno07+ZdWBIq+zoN5ZCgoCoQwLnhhK4oBUS8y7xGoFRhwT49CP9eqSfPb3aEBtoiH16BkJQCdDmW7AMl9VFq0w6GUCqdKvGBENoFXpj0R2LvjSUwCsERDAGtPHGVldiqBHeWf0xxwcEQkgJOMZr+3xxpHQ+Mb//CWfMIRmIDSUtlZlhplLrOJED41orIQgDecabHaP6pPY+E2OOEQChJFBkvC4E3lv0CQIgNw4o8Y6UiCNicQdjanxqQrVtQ0s9xk0bGkU5j+zR+E38tFa/1pF6aD1/GXrqfteJfkySzYkfImfjV8CS4mXjfY7jeUNkn+YXSxvxBR3Amc3II+fnEd4CS+tmQlH2bOGoO2JwC8umFS3aI8MckiuBPol3lnilqs3EyfjxQORjak/yxTsPStq/tYraKikMvY2pak769/SOhyTl3ek8j+aswb68g5qgGb4uM1Z+oxgzzg9+rheyvQTQll9xFcpfLwNeW9nMGG2r+4M9xmWAQ760BrCejjDQacI/hVqT1nYMXtDeMnYmCv7chp0asC2soymelRN5VcjPpC5ryhtGpnOMjnjpSEIhN5CR7reJNZvTCPckiT5OUTNIbU9oVwPYm5fkOnM2z5hb0OSeBNlGXcatjbVtdaX03qTNF0p+YUWWc8Mw1cXjUJWVchS3VPS7+s5RurnoJqNUSalSgI3MAnw6m9ivyoSO/lmVuaRgd1pm7lLJHOfz4gBNuIlaFKQ8HKlDicw7G+sBWmUPxisbVcYtrVixhqeojtiiO0XGWgT/dFqoED+BpNSiOlJrPu+g6c+AdEJ6gupIDLVEwe91L5S9dSOVqnyvpB3EjUkiN7Hr4xj8JBD+9CcFv7D8/MgvzfZjwBXxp0XDPa7XZ3NJvysXXxuILTopGsSbppRgwOkHvfb4unFBQpgYytMOSuuwo/+ZosKM4aB0R+mALMiZJGW7lLLnRddMMdUo+y3BRwKxtZEHuYlSFY6o9ualrtymEOq3nr6GcSGcOWOUhA8Dh5ht7KMhSTLUOFdy8yVWC4F91eBcdPGYLv2n66iVNSf95xAlsZwE9Gmp1FcqPY+tjQxpVk7C1Ccl3VqYFOKpNR/39UyKbktAlpeAjw1I65Xv/c+RFTWnGVuUbhf4cX3ibbgXYYxUzSlVBeZlBz4M9FCsmym147Kfj9Tt9P2DOiOLUgz4qFCnsJ/Tao9vX1ya0vjGnDnTsl7IL5XoU5Sc3GlGyhNR2Vn106lSK6lu66YBLEVNn2RrBZevqoRdYYUVvPAXJrOCc9SFL6sAAAAASUVORK5CYII=";
 const NotFoundPoster = "/javascript-movie-review/assets/notFoundImage-CsSMeXzn.png";
 const extractThumbnailInfo = (movies) => {
@@ -128,28 +99,6 @@ const makeMovieThumbnail = (movie) => {
   fragment.appendChild(list);
   return fragment;
 };
-const getElementOrThrow = (selector) => {
-  const element = document.querySelector(selector);
-  if (!element) {
-    throw new Error(`${selector} 요소를 찾을 수 없습니다.`);
-  }
-  return element;
-};
-const getYearFromDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.getFullYear();
-};
-class LogoView {
-  #dom;
-  constructor() {
-    this.#dom = {
-      logo: getElementOrThrow(".logo")
-    };
-  }
-  bindEvent(handler) {
-    this.#dom.logo.addEventListener("click", handler);
-  }
-}
 class MovieListView {
   #dom;
   constructor() {
@@ -162,7 +111,7 @@ class MovieListView {
       )
     };
   }
-  bindEvent(handler) {
+  bindMovieItemClick(handler) {
     this.#dom.list.addEventListener("click", (e) => {
       let item = e.target.closest(".thumbnail-container");
       if (!item) return;
@@ -214,24 +163,6 @@ class MovieListView {
     this.#dom.notFound.style.display = "none";
   }
 }
-class SearchView {
-  #dom;
-  constructor() {
-    this.#dom = {
-      form: getElementOrThrow(".search"),
-      input: getElementOrThrow(".search-input")
-    };
-  }
-  bindEvent(handler) {
-    this.#dom.form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      await handler();
-    });
-  }
-  getInputValue() {
-    return this.#dom.input.value;
-  }
-}
 class TopRatedView {
   #dom;
   constructor() {
@@ -243,7 +174,7 @@ class TopRatedView {
       button: getElementOrThrow(".detail")
     };
   }
-  bindEvent(handler) {
+  bindDetailButtonClick(handler) {
     this.#dom.button.addEventListener("click", async () => {
       const movieId = this.#dom.title.getAttribute("data-movie-id");
       if (!movieId) {
@@ -275,7 +206,7 @@ class MovieDetailView {
       overview: getElementOrThrow(".overview")
     };
   }
-  bindCloseEvent() {
+  bindModalCloseActions() {
     this.#dom.closeButton.addEventListener("click", () => {
       this.#dom.modal.close();
     });
@@ -301,7 +232,7 @@ class MovieDetailView {
     if (!movieId) {
       return void 0;
     }
-    return movieId.toString();
+    return Number(movieId);
   }
   renderData({
     id,
@@ -324,42 +255,6 @@ class MovieDetailView {
     this.#dom.overview.textContent = overview.trim().length === 0 ? "줄거리가 존재하지 않습니다." : overview;
   }
 }
-const apiUrl = "https://api.themoviedb.org/3";
-const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWJkNzQ4MWJiMzE0Mjg0OWMzYjY3MjYxYzU4NzIzOCIsIm5iZiI6MTc0NzcxOTQ0OS41MDEsInN1YiI6IjY4MmMxNTE5ZjZjZjIwNzZmM2UyNTExYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6oFSMOPSVI3bY8aHLin9MmLuM4wNHFPREt_eB5mwAy8";
-const fetchMovieDetail = async (movieId) => {
-  const response = await fetch(
-    `${apiUrl}/movie/${movieId}?language=ko-KR&region=ko-KR`,
-    {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  );
-  if (!response.ok) {
-    throw new Error("영화 상세 정보를 불러오는 데 실패했습니다.");
-  }
-  const data = await response.json();
-  const {
-    id,
-    poster_path,
-    title,
-    release_date,
-    genres,
-    vote_average,
-    overview
-  } = data;
-  return {
-    id,
-    poster_path,
-    title,
-    release_date,
-    genres,
-    vote_average,
-    overview
-  };
-};
 const RATING = {
   MIN_SCORE: 0,
   MAX_SCORE: 10,
@@ -398,9 +293,6 @@ class RatingView {
       score: getElementOrThrow(".review-score")
     };
   }
-  setRating(ratingValue) {
-    this.#dom.container.dataset.ratingValue = ratingValue;
-  }
   renderByRatingValue(savedRatingValue) {
     this.#dom.stars.forEach((star) => {
       if (Number(star.getAttribute("data-score")) <= savedRatingValue) {
@@ -437,7 +329,7 @@ class RatingView {
       this.#dom.score.textContent = `(${RATING.EXCELLENT.SCORE}/${RATING.MAX_SCORE})`;
     }
   }
-  bindEvent(handler) {
+  bindRatingStarClick(handler) {
     this.#dom.container.addEventListener("click", (e) => {
       let star = e.target.closest(".review-star");
       if (!star) return;
@@ -445,146 +337,316 @@ class RatingView {
       if (!ratingValue) {
         throw new Error("올바른 별점이 설정되지 않았습니다.");
       }
-      handler(ratingValue);
+      handler(Number(ratingValue));
     });
+  }
+}
+const apiUrl$1 = "https://api.themoviedb.org/3";
+const accessToken$1 = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWJkNzQ4MWJiMzE0Mjg0OWMzYjY3MjYxYzU4NzIzOCIsIm5iZiI6MTc0NzcxOTQ0OS41MDEsInN1YiI6IjY4MmMxNTE5ZjZjZjIwNzZmM2UyNTExYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6oFSMOPSVI3bY8aHLin9MmLuM4wNHFPREt_eB5mwAy8";
+const fetchPopularMovies = async (page) => {
+  const response = await fetch(
+    `${apiUrl$1}/movie/popular?language=ko-KR&page=${page}&region=ko-KR`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken$1}`
+      }
+    }
+  );
+  if (!response.ok) {
+    throw new Error("영화를 불러오는 데 실패했습니다.");
+  }
+  const data = await response.json();
+  return {
+    movies: data.results,
+    nowPage: data.page,
+    totalPages: data.total_pages
+  };
+};
+const fetchSearchedMovies = async (page, searchTitle) => {
+  const response = await fetch(
+    `${apiUrl$1}/search/movie?query=${encodeURIComponent(searchTitle)}&include_adult=false&language=ko-KR&page=${page}&region=KR`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken$1}`
+      }
+    }
+  );
+  if (!response.ok) {
+    throw new Error("영화 검색 중 에러가 발생했습니다.");
+  }
+  const data = await response.json();
+  return {
+    movies: data.results,
+    nowPage: data.page,
+    totalPages: data.total_pages
+  };
+};
+const fetchTopRatedMovie = async () => {
+  const response = await fetch(
+    `${apiUrl$1}/movie/top_rated?language=ko-KR&page=1&region=KR`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken$1}`
+      }
+    }
+  );
+  if (!response.ok) {
+    throw new Error("인기 영화를 가져오는 중 에러가 발생했습니다.");
+  }
+  const data = await response.json();
+  return data.results;
+};
+class MovieListController {
+  #movieListView;
+  #state;
+  constructor(movieListView) {
+    this.#movieListView = movieListView;
+    this.#state = {
+      mode: "popular",
+      page: 1,
+      totalPages: 1,
+      searchQuery: "",
+      isLoading: false
+    };
+  }
+  async loadInitialPopular() {
+    this.#state.mode = "popular";
+    this.#state.page = 1;
+    this.#state.searchQuery = "";
+    this.#movieListView.remove();
+    this.#movieListView.removeTopMargin();
+    await this.#loadCurrentPage();
+  }
+  async search(query) {
+    this.#state.mode = "search";
+    this.#state.page = 1;
+    this.#state.searchQuery = query;
+    this.#movieListView.remove();
+    this.#movieListView.addTopMargin();
+    this.#movieListView.hideNotFound();
+    this.#movieListView.renderTitle(`"${query}"검색 결과`);
+    await this.#loadCurrentPage();
+  }
+  async loadNextPage() {
+    if (this.#state.isLoading) {
+      return;
+    }
+    if (this.#state.page >= this.#state.totalPages) {
+      return;
+    }
+    const nextPage = this.#state.page + 1;
+    await this.#loadPage(nextPage);
+  }
+  async #loadCurrentPage() {
+    await this.#loadPage(this.#state.page);
+  }
+  async #loadPage(page) {
+    try {
+      this.#state.isLoading = true;
+      this.#movieListView.addSkeletons();
+      const { movies, nowPage, totalPages } = await this.#requestMovies(page);
+      this.#state.page = nowPage;
+      this.#state.totalPages = totalPages;
+      this.#renderMovies(movies, nowPage);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      this.#state.isLoading = false;
+      this.#movieListView.removeAllSkeletons();
+    }
+  }
+  #renderMovies(movies, page) {
+    if (movies.length === 0 && this.#state.mode === "search" && page === 1) {
+      this.#movieListView.showNotFound();
+    }
+    this.#movieListView.addMovies(extractThumbnailInfo(movies));
+  }
+  #requestMovies(page) {
+    if (this.#state.mode === "search") {
+      return fetchSearchedMovies(page, this.#state.searchQuery);
+    }
+    return fetchPopularMovies(page);
+  }
+}
+class SearchView {
+  #dom;
+  constructor() {
+    this.#dom = {
+      form: getElementOrThrow(".search"),
+      input: getElementOrThrow(".search-input")
+    };
+  }
+  bindSearchSubmit(handler) {
+    this.#dom.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handler();
+    });
+  }
+  getInputValue() {
+    return this.#dom.input.value;
+  }
+}
+class TopRatedController {
+  #topRatedView;
+  constructor(topRatedView) {
+    this.#topRatedView = topRatedView;
+  }
+  hideBanner() {
+    this.#topRatedView.hide();
+  }
+  async loadBanner() {
+    try {
+      const movie = await fetchTopRatedMovie();
+      this.#topRatedView.render(extractThumbnailInfo(movie)[0]);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+}
+const apiUrl = "https://api.themoviedb.org/3";
+const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWJkNzQ4MWJiMzE0Mjg0OWMzYjY3MjYxYzU4NzIzOCIsIm5iZiI6MTc0NzcxOTQ0OS41MDEsInN1YiI6IjY4MmMxNTE5ZjZjZjIwNzZmM2UyNTExYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6oFSMOPSVI3bY8aHLin9MmLuM4wNHFPREt_eB5mwAy8";
+const fetchMovieDetail = async (movieId) => {
+  const response = await fetch(
+    `${apiUrl}/movie/${movieId}?language=ko-KR&region=ko-KR`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  );
+  if (!response.ok) {
+    throw new Error("영화 상세 정보를 불러오는 데 실패했습니다.");
+  }
+  const data = await response.json();
+  const {
+    id,
+    poster_path,
+    title,
+    release_date,
+    genres,
+    vote_average,
+    overview
+  } = data;
+  return {
+    id,
+    poster_path,
+    title,
+    release_date,
+    genres,
+    vote_average,
+    overview
+  };
+};
+class MovieDetailModalController {
+  #movieDetailView;
+  #ratingView;
+  constructor(movieDetailView, ratingView) {
+    this.#movieDetailView = movieDetailView;
+    this.#ratingView = ratingView;
+  }
+  async showMovieInformation(movieId) {
+    try {
+      await this.#loadMovieDetail(movieId);
+      this.#loadRatingValue();
+      this.#movieDetailView.show();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+  setRatingValue(ratingValue) {
+    const movieId = this.#movieDetailView.getMovieId();
+    localStorage.setItem(`rating-${movieId}`, ratingValue.toString());
+    this.#ratingView.renderByRatingValue(ratingValue);
+  }
+  async #loadMovieDetail(movieId) {
+    const movieDetail = { ...await fetchMovieDetail(movieId) };
+    this.#movieDetailView.renderData(movieDetail);
+  }
+  #loadRatingValue() {
+    const movieId = this.#movieDetailView.getMovieId();
+    const ratingValue = Number(localStorage.getItem(`rating-${movieId}`));
+    this.#ratingView.renderByRatingValue(ratingValue);
+  }
+}
+class InfiniteScrollObserver {
+  #observer;
+  constructor(target, onIntersect) {
+    this.#observer = new IntersectionObserver(
+      async ([entry]) => {
+        if (!entry.isIntersecting) return;
+        await onIntersect();
+      },
+      { root: null, threshold: 0.2 }
+    );
+    this.#observer.observe(target);
   }
 }
 class App {
   #views;
-  #state;
+  #controller;
   constructor() {
     this.#views = {
       logo: new LogoView(),
       topRated: new TopRatedView(),
-      search: new SearchView(),
       movieList: new MovieListView(),
       movieDetail: new MovieDetailView(),
-      rating: new RatingView()
+      rating: new RatingView(),
+      search: new SearchView()
     };
-    this.#state = {
-      popularMoviePage: 1,
-      searchMoviePage: 1,
-      totalSearchMoviePage: 1,
-      totalPopularMoviePage: 1,
-      searchString: ""
+    this.#controller = {
+      movieList: new MovieListController(this.#views.movieList),
+      topRated: new TopRatedController(this.#views.topRated),
+      movieDetail: new MovieDetailModalController(
+        this.#views.movieDetail,
+        this.#views.rating
+      )
     };
   }
   async init() {
-    this.#bindAllEvents();
-    this.#views.movieList.removeTopMargin();
     addEventListener("load", () => {
       const buttonImage = document.createElement("img");
       buttonImage.src = FilledStarIcon;
     });
-    await this.#renderPopularMovieAtFirst();
+    this.#bindAllEvents();
+    this.#views.movieList.removeTopMargin();
+    await this.#controller.movieList.loadInitialPopular();
+    await this.#controller.topRated.loadBanner();
+    this.#bindInfiniteScroll();
   }
   #bindAllEvents() {
-    this.#bindWindowEvent();
-    this.#views.search.bindEvent(this.#searchEventHandler);
-    this.#views.logo.bindEvent(this.#logoEventHandler);
-    this.#views.movieList.bindEvent(this.#movieDetailEventHandler);
-    this.#views.movieDetail.bindCloseEvent();
-    this.#views.topRated.bindEvent(this.#movieDetailEventHandler);
-    this.#views.rating.bindEvent(this.#ratingEventHandler);
-  }
-  async #renderPopularMovieAtFirst() {
-    try {
-      this.#views.movieList.addSkeletons();
-      const {
-        movies: popularMovies,
-        nowPage,
-        totalPages: popularTotalPages
-      } = await fetchPopularMovies(this.#state.popularMoviePage);
-      this.#state.popularMoviePage = nowPage;
-      this.#state.totalPopularMoviePage = popularTotalPages;
-      this.#views.movieList.addMovies(extractThumbnailInfo(popularMovies));
-      this.#views.topRated.render(extractThumbnailInfo(popularMovies)[0]);
-    } catch (error) {
-      alert(ERROR_MESSAGE.MOVIE.FAIELD_GET_POPULAR);
-    } finally {
-      this.#views.movieList.removeAllSkeletons();
-    }
-  }
-  #logoEventHandler = () => {
-    location.reload();
-  };
-  #bindWindowEvent = () => {
-    window.addEventListener("scroll", async () => {
-      const isSearchPage = this.#state.searchString.length !== 0;
-      if (isSearchPage && this.#state.searchMoviePage === this.#state.totalSearchMoviePage) {
-        return;
-      }
-      if (!isSearchPage && this.#state.popularMoviePage === this.#state.totalPopularMoviePage) {
-        return;
-      }
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
-        const searchValue = this.#state.searchString;
-        const requestMovies = isSearchPage ? () => fetchSearchedMovies(++this.#state.searchMoviePage, searchValue) : () => fetchPopularMovies(++this.#state.popularMoviePage);
-        setTimeout(async () => {
-          try {
-            this.#views.movieList.addSkeletons();
-            const { movies, nowPage, totalPages } = await requestMovies();
-            if (isSearchPage) {
-              this.#state.totalSearchMoviePage = totalPages;
-              this.#state.searchMoviePage = nowPage;
-            } else {
-              this.#state.totalPopularMoviePage = totalPages;
-              this.#state.popularMoviePage = nowPage;
-            }
-            this.#views.movieList.addMovies(extractThumbnailInfo(movies));
-          } catch (error) {
-            alert(ERROR_MESSAGE.MOVIE.FAILED_GET_MORE);
-          } finally {
-            this.#views.movieList.removeAllSkeletons();
-          }
-        }, 200);
-      }
+    this.#views.logo.bindLogoClick(() => location.reload());
+    this.#views.topRated.bindDetailButtonClick(async (movieId) => {
+      await this.#controller.movieDetail.showMovieInformation(movieId);
     });
-  };
-  #searchEventHandler = async () => {
-    const searchValue = this.#views.search.getInputValue();
-    if (searchValue === this.#state.searchString) {
-      return;
-    }
-    this.#views.movieList.addTopMargin();
-    this.#state.searchString = searchValue;
-    this.#views.topRated.hide();
-    this.#views.movieList.hideNotFound();
-    this.#state.searchMoviePage = 1;
-    window.scrollTo({ top: 0, behavior: "instant" });
-    this.#views.movieList.renderTitle(`"${searchValue}"검색 결과`);
-    try {
-      this.#views.movieList.remove();
-      this.#views.movieList.addSkeletons();
-      const { movies, nowPage, totalPages } = await fetchSearchedMovies(
-        this.#state.searchMoviePage,
-        searchValue
-      );
-      this.#state.totalSearchMoviePage = totalPages;
-      this.#state.searchMoviePage = nowPage;
-      this.#views.movieList.addMovies(extractThumbnailInfo(movies));
-      if (movies.length === 0) {
-        this.#views.movieList.showNotFound();
-      }
-    } catch (error) {
-      alert(ERROR_MESSAGE.MOVIE.FAILED_SEARCH);
-    } finally {
-      this.#views.movieList.removeAllSkeletons();
-    }
-  };
-  #movieDetailEventHandler = async (movieId) => {
-    const movieDetail = { ...await fetchMovieDetail(movieId) };
-    this.#views.movieDetail.show();
-    const savedRatingValue = Number(localStorage.getItem(`rating-${movieId}`));
-    this.#views.rating.renderByRatingValue(savedRatingValue);
-    this.#views.movieDetail.renderData(movieDetail);
-  };
-  #ratingEventHandler = (ratingValue) => {
-    this.#views.rating.setRating(ratingValue);
-    const movieId = this.#views.movieDetail.getMovieId();
-    localStorage.setItem(`rating-${movieId}`, ratingValue);
-    this.#views.rating.renderByRatingValue(Number(ratingValue));
-  };
+    this.#views.movieList.bindMovieItemClick(async (movieId) => {
+      await this.#controller.movieDetail.showMovieInformation(movieId);
+    });
+    this.#views.movieDetail.bindModalCloseActions();
+    this.#views.rating.bindRatingStarClick((ratingValue) => {
+      this.#controller.movieDetail.setRatingValue(ratingValue);
+    });
+    this.#views.search.bindSearchSubmit(async () => {
+      this.#controller.topRated.hideBanner();
+      const query = this.#views.search.getInputValue();
+      await this.#controller.movieList.search(query);
+    });
+  }
+  #bindInfiniteScroll() {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    new InfiniteScrollObserver(
+      footer,
+      this.#controller.movieList.loadNextPage.bind(this.#controller.movieList)
+    );
+  }
 }
 const app = new App();
 await app.init();
